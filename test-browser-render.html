@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Renderizado - DEVAD-MTO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+        #results { white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnóstico de Sistema DEVAD-MTO</h1>
+    
+    <div class="test-box">
+        <h2>✅ Estado Básico</h2>
+        <p class="success">✓ HTML cargado correctamente</p>
+        <p class="success">✓ Navegador funcionando</p>
+        <p id="timestamp"></p>
+    </div>
+
+    <div class="test-box">
+        <h2>🔗 Pruebas de Conexión</h2>
+        <button onclick="testSupabase()">Probar Supabase</button>
+        <button onclick="testAPI()">Probar API</button>
+        <button onclick="testReact()">Abrir App React</button>
+        <div id="results" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="test-box">
+        <h2>📊 Información del Sistema</h2>
+        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+        <p><strong>URL Actual:</strong> <span id="currentUrl"></span></p>
+        <p><strong>Protocolo:</strong> <span id="protocol"></span></p>
+    </div>
+
+    <script type="module">
+        // Mostrar información básica
+        document.getElementById('timestamp').innerHTML = 
+            `<strong>Timestamp:</strong> ${new Date().toLocaleString('es-MX')}`;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('protocol').textContent = window.location.protocol;
+
+        // Test de Supabase
+        window.testSupabase = async () => {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p class="info">🔄 Probando conexión a Supabase...</p>';
+            
+            try {
+                // Importar configuración de Supabase
+                const response = await fetch('http://localhost:5173/src/lib/supabase.js');
+                const text = await response.text();
+                
+                if (text.includes('createClient')) {
+                    results.innerHTML += '<p class="success">✅ Archivo supabase.js encontrado</p>';
+                } else {
+                    results.innerHTML += '<p class="error">❌ Archivo supabase.js no válido</p>';
+                }
+
+                // Probar importación dinámica
+                const { supabase } = await import('/src/lib/supabase.js');
+                results.innerHTML += '<p class="success">✅ Supabase client importado</p>';
+
+                // Probar conexión
+                const { data, error } = await supabase.from('maintenance_templates').select('count');
+                
+                if (error) {
+                    results.innerHTML += `<p class="error">❌ Error de Supabase: ${error.message}</p>`;
+                } else {
+                    results.innerHTML += '<p class="success">✅ Conexión a Supabase exitosa</p>';
+                    results.innerHTML += `<p class="info">📊 Respuesta: ${JSON.stringify(data, null, 2)}</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">❌ Error: ${error.message}</p>`;
+                console.error('Error completo:', error);
+            }
+        };
+
+        // Test de API
+        window.testAPI = async () => {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p class="info">🔄 Probando endpoints...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:5173/');
+                if (response.ok) {
+                    results.innerHTML += '<p class="success">✅ Servidor Vite respondiendo</p>';
+                } else {
+                    results.innerHTML += `<p class="error">❌ Servidor respondió con: ${response.status}</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">❌ Error de red: ${error.message}</p>`;
+            }
+        };
+
+        // Abrir app React
+        window.testReact = () => {
+            window.location.href = 'http://localhost:5173/';
+        };
+
+        // Auto-ejecutar test básico
+        setTimeout(() => {
+            testAPI();
+        }, 500);
+    </script>
+</body>
+</html>
