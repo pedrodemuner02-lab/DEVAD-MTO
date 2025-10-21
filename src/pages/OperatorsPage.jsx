@@ -143,13 +143,33 @@ const OperatorsPage = () => {
   const loadOperators = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Cargando operadores...');
+      
       const { data, error } = await operatorService.getAll();
-      if (error) throw error;
+      
+      if (error) {
+        console.error('❌ Error al cargar operadores:', error);
+        throw error;
+      }
+      
+      console.log(`✅ ${data?.length || 0} operadores cargados`);
       setOperators(data || []);
       setFilteredOperators(data || []);
+      
+      if (!data || data.length === 0) {
+        setToast({ 
+          isVisible: true, 
+          message: 'ℹ️ No hay operadores registrados. Agrega el primero.', 
+          type: 'info' 
+        });
+      }
     } catch (error) {
-      console.error('Error al cargar operadores:', error);
-      setToast({ isVisible: true, message: '❌ Error al cargar operadores', type: 'error' });
+      console.error('❌ Error crítico al cargar operadores:', error);
+      setToast({ 
+        isVisible: true, 
+        message: `❌ Error al cargar operadores: ${error.message}`, 
+        type: 'error' 
+      });
       setOperators([]);
       setFilteredOperators([]);
     } finally {

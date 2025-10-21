@@ -343,22 +343,31 @@ export const operatorService = {
   // Obtener todos los operadores
   async getAll() {
     try {
+      console.log('🔍 Obteniendo operadores desde Supabase...');
+      
       const { data, error } = await supabase
         .from(TABLES.OPERATORS)
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error en operatorService.getAll:', error);
+        throw error;
+      }
+      
+      console.log(`✅ ${data?.length || 0} operadores obtenidos exitosamente`);
       return { data: data.map(item => operatorService.transformFromDB(item)), error: null };
     } catch (error) {
-      console.error('Error al obtener operadores:', error);
-      return { data: null, error };
+      console.error('❌ Error crítico al obtener operadores:', error);
+      return { data: [], error };
     }
   },
 
   // Crear nuevo operador
   async create(operator) {
     try {
+      console.log('🆕 Creando operador:', operator.nombre);
+      
       const { data, error } = await supabase
         .from(TABLES.OPERATORS)
         .insert([{
@@ -369,19 +378,24 @@ export const operatorService = {
           telefono: operator.telefono,
           email: operator.email,
           fecha_ingreso: operator.fechaIngreso,
-          estado: operator.estado,
-          certificaciones: operator.certificaciones,
+          estado: operator.estado || 'Disponible',
+          certificaciones: operator.certificaciones || [],
           especialidad: operator.especialidad,
-          mantenimientos_completados: operator.mantenimientosCompletados,
-          eficiencia: operator.eficiencia,
+          mantenimientos_completados: operator.mantenimientosCompletados || 0,
+          eficiencia: operator.eficiencia || 100,
         }])
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error creando operador:', error);
+        throw error;
+      }
+      
+      console.log('✅ Operador creado exitosamente:', data.id);
       return { data: operatorService.transformFromDB(data), error: null };
     } catch (error) {
-      console.error('Error al crear operador:', error);
+      console.error('❌ Error crítico al crear operador:', error);
       return { data: null, error };
     }
   },
@@ -389,6 +403,8 @@ export const operatorService = {
   // Actualizar operador
   async update(id, operator) {
     try {
+      console.log('📝 Actualizando operador:', id);
+      
       const { data, error } = await supabase
         .from(TABLES.OPERATORS)
         .update({
@@ -409,26 +425,39 @@ export const operatorService = {
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error actualizando operador:', error);
+        throw error;
+      }
+      
+      console.log('✅ Operador actualizado exitosamente');
       return { data: operatorService.transformFromDB(data), error: null };
     } catch (error) {
-      console.error('Error al actualizar operador:', error);
+      console.error('❌ Error crítico al actualizar operador:', error);
       return { data: null, error };
     }
   },
 
-  // Eliminar operador
+  // Eliminar operador (soft delete)
   async delete(id) {
     try {
+      console.log('🗑️ Desactivando operador:', id);
+      
+      // Soft delete: marcar como inactivo en lugar de eliminar
       const { error } = await supabase
         .from(TABLES.OPERATORS)
-        .delete()
+        .update({ estado: 'Inactivo' })
         .eq('id', id);
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error desactivando operador:', error);
+        throw error;
+      }
+      
+      console.log('✅ Operador desactivado exitosamente');
       return { error: null };
     } catch (error) {
-      console.error('Error al eliminar operador:', error);
+      console.error('❌ Error crítico al desactivar operador:', error);
       return { error };
     }
   },
