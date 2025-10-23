@@ -64,6 +64,47 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
+  // ========== LOGIN COMO TURNO (SIN CONTRASEÑA) ==========
+  const loginAsTurno = async (turnoData) => {
+    try {
+      console.log('⏰ Iniciando sesión como turno:', turnoData.nombre);
+
+      // Crear usuario de turno
+      const turnoUser = {
+        id: `turno-${turnoData.id}`,
+        email: `${turnoData.id}@devad-mto.local`,
+        role: 'operador',
+        turno: turnoData.id
+      };
+
+      // Crear operador virtual representando el turno
+      const turnoOperator = {
+        id: `operator-${turnoData.id}`,
+        codigo: turnoData.id.toUpperCase(),
+        nombre: turnoData.nombre,
+        puesto: 'Operador de Turno',
+        turno: turnoData.id,
+        email: `${turnoData.id}@devad-mto.local`,
+        estado: 'activo',
+        horario: turnoData.horario
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem('devad-mto-user', JSON.stringify(turnoUser));
+      localStorage.setItem('devad-mto-operator', JSON.stringify(turnoOperator));
+      localStorage.setItem('devad-mto-turno-activo', turnoData.id);
+
+      setUser(turnoUser);
+      setOperator(turnoOperator);
+
+      console.log('✅ Login turno exitoso');
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error en loginAsTurno:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   // ========== LOGIN COMO ADMINISTRADOR (CON CONTRASEÑA) ==========
   const loginAsAdmin = async (password) => {
     try {
@@ -89,8 +130,8 @@ export const AuthProvider = ({ children }) => {
       const adminOperator = {
         id: 'admin-op',
         codigo: 'ADMIN',
-        nombre: 'Administrador del Sistema',
-        puesto: 'Administrador',
+        nombre: 'Jefe de Mantenimiento',
+        puesto: 'Jefe de Mantenimiento',
         turno: 'Completo',
         email: 'admin@devad-mto.local',
         estado: 'activo'
@@ -99,6 +140,7 @@ export const AuthProvider = ({ children }) => {
       // Guardar en localStorage
       localStorage.setItem('devad-mto-user', JSON.stringify(adminUser));
       localStorage.setItem('devad-mto-operator', JSON.stringify(adminOperator));
+      localStorage.removeItem('devad-mto-turno-activo'); // Admin no tiene turno específico
 
       setUser(adminUser);
       setOperator(adminOperator);
@@ -111,7 +153,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ========== LOGIN COMO OPERADOR (SIN CONTRASEÑA) ==========
+  // ========== LOGIN COMO OPERADOR (LEGACY - MANTENER POR COMPATIBILIDAD) ==========
   const loginAsOperator = async (operatorData) => {
     try {
       console.log('👷 Iniciando sesión como operador:', operatorData.nombre);
@@ -168,6 +210,7 @@ export const AuthProvider = ({ children }) => {
       // Limpiar localStorage
       localStorage.removeItem('devad-mto-user');
       localStorage.removeItem('devad-mto-operator');
+      localStorage.removeItem('devad-mto-turno-activo');
 
       // Intentar cerrar sesión en customAuthService (si aplica)
       try {
@@ -254,12 +297,14 @@ export const AuthProvider = ({ children }) => {
     userRole: getUserRole(),
     loading,
     login,              // Legacy
-    loginAsAdmin,       // Nuevo: Admin con contraseña
-    loginAsOperator,    // Nuevo: Operador sin contraseña
+    loginAsAdmin,       // Admin con contraseña
+    loginAsOperator,    // Legacy: Operador individual
+    loginAsTurno,       // Nuevo: Login por turno (sistema simplificado)
     logout,
     updatePassword,
     hasPermission,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    turnoActivo: localStorage.getItem('devad-mto-turno-activo') // Obtener turno actual
   };
 
   return (

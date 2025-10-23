@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Settings, Clock, Users, Database, Bell } from 'lucide-react';
+import { Settings, Clock, Users, Database, Bell, Calendar } from 'lucide-react';
 import TurnosConfig from '../components/settings/TurnosConfig';
+import TurnosSemanaConfig from '../components/settings/TurnosSemanaConfig';
 
 const SettingsPage = () => {
-  const [activeTab, setActiveTab] = useState('turnos');
+  const [activeTab, setActiveTab] = useState('carga-semanal');
 
   const tabs = [
+    { id: 'carga-semanal', name: 'Carga Semanal', icon: Calendar },
     { id: 'turnos', name: 'Turnos', icon: Clock },
     { id: 'general', name: 'General', icon: Settings },
     { id: 'usuarios', name: 'Usuarios', icon: Users },
@@ -44,6 +46,8 @@ const SettingsPage = () => {
 
       {/* Contenido de tabs */}
       <div>
+        {activeTab === 'carga-semanal' && <TurnosSemanaConfig />}
+        
         {activeTab === 'turnos' && <TurnosConfig />}
         
         {activeTab === 'general' && (
