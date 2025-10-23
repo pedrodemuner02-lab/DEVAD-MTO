@@ -16,18 +16,30 @@ export const AuthProvider = ({ children }) => {
   const [operator, setOperator] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Cargar sesión y datos del operador al iniciar
+  // Cargar sesión desde localStorage al iniciar
   useEffect(() => {
     console.log('🔄 AuthContext: Iniciando carga de usuario...');
     
     const loadUserData = async () => {
       try {
-        console.log('🔄 AuthContext: Llamando a customAuthService.getSession()...');
+        // Intentar cargar desde localStorage primero (nuevo sistema)
+        const storedUser = localStorage.getItem('devad-mto-user');
+        const storedOperator = localStorage.getItem('devad-mto-operator');
+
+        if (storedUser && storedOperator) {
+          console.log('✅ AuthContext: Sesión encontrada en localStorage');
+          setUser(JSON.parse(storedUser));
+          setOperator(JSON.parse(storedOperator));
+          setLoading(false);
+          return;
+        }
+
+        // Si no hay en localStorage, intentar con customAuthService (legacy)
+        console.log('🔄 AuthContext: Verificando customAuthService...');
         const { data } = await customAuthService.getSession();
-        console.log('✅ AuthContext: Respuesta de getSession:', data);
         
         if (data?.user && data?.operator) {
-          console.log('✅ AuthContext: Usuario y operador encontrados');
+          console.log('✅ AuthContext: Usuario y operador encontrados (legacy)');
           setUser(data.user);
           setOperator(data.operator);
         } else {
@@ -50,11 +62,83 @@ export const AuthProvider = ({ children }) => {
     loadUserData().finally(() => {
       clearTimeout(timeoutId);
     });
-
-    // No necesitamos listener de Supabase Auth
   }, []);
 
-  // Función de login
+  // ========== LOGIN COMO ADMINISTRADOR (CON CONTRASEÑA) ==========
+  const loginAsAdmin = async (password) => {
+    try {
+      console.log('🔐 Intentando login como administrador...');
+      
+      // Contraseñas hardcodeadas (puedes cambiar esto)
+      const validPasswords = ['admin123', 'devad2025', 'mantenimiento'];
+      
+      if (!validPasswords.includes(password)) {
+        return { 
+          success: false, 
+          error: 'Contraseña incorrecta para administrador' 
+        };
+      }
+
+      // Crear usuario administrador ficticio
+      const adminUser = {
+        id: 'admin-user',
+        email: 'admin@devad-mto.local',
+        role: 'administrador'
+      };
+
+      const adminOperator = {
+        id: 'admin-op',
+        codigo: 'ADMIN',
+        nombre: 'Administrador del Sistema',
+        puesto: 'Administrador',
+        turno: 'Completo',
+        email: 'admin@devad-mto.local',
+        estado: 'activo'
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem('devad-mto-user', JSON.stringify(adminUser));
+      localStorage.setItem('devad-mto-operator', JSON.stringify(adminOperator));
+
+      setUser(adminUser);
+      setOperator(adminOperator);
+
+      console.log('✅ Login administrador exitoso');
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error en loginAsAdmin:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ========== LOGIN COMO OPERADOR (SIN CONTRASEÑA) ==========
+  const loginAsOperator = async (operatorData) => {
+    try {
+      console.log('👷 Iniciando sesión como operador:', operatorData.nombre);
+
+      // Crear usuario operador
+      const operatorUser = {
+        id: `operator-${operatorData.id}`,
+        email: operatorData.email || `${operatorData.codigo}@devad-mto.local`,
+        role: 'operador'
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem('devad-mto-user', JSON.stringify(operatorUser));
+      localStorage.setItem('devad-mto-operator', JSON.stringify(operatorData));
+
+      setUser(operatorUser);
+      setOperator(operatorData);
+
+      console.log('✅ Login operador exitoso');
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error en loginAsOperator:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ========== LOGIN LEGACY (MANTENER COMPATIBILIDAD) ==========
   const login = async (email, password) => {
     try {
       const { data, error } = await customAuthService.signIn(email, password);
@@ -79,17 +163,26 @@ export const AuthProvider = ({ children }) => {
   // Función de logout
   const logout = async () => {
     try {
-      const { error } = await customAuthService.signOut();
+      console.log('🚪 Cerrando sesión...');
       
-      if (!error) {
-        setUser(null);
-        setOperator(null);
-        return { success: true };
-      }
+      // Limpiar localStorage
+      localStorage.removeItem('devad-mto-user');
+      localStorage.removeItem('devad-mto-operator');
 
-      return { success: false, error: error.message };
+      // Intentar cerrar sesión en customAuthService (si aplica)
+      try {
+        await customAuthService.signOut();
+      } catch (err) {
+        console.log('ℹ️ No había sesión en customAuthService');
+      }
+      
+      setUser(null);
+      setOperator(null);
+      
+      console.log('✅ Sesión cerrada exitosamente');
+      return { success: true };
     } catch (error) {
-      console.error('Error en logout:', error);
+      console.error('❌ Error en logout:', error);
       return { success: false, error: error.message };
     }
   };
@@ -160,7 +253,9 @@ export const AuthProvider = ({ children }) => {
     operator,
     userRole: getUserRole(),
     loading,
-    login,
+    login,              // Legacy
+    loginAsAdmin,       // Nuevo: Admin con contraseña
+    loginAsOperator,    // Nuevo: Operador sin contraseña
     logout,
     updatePassword,
     hasPermission,
