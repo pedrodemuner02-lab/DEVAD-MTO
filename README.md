@@ -37,6 +37,13 @@ Sistema integral de gestión de mantenimiento preventivo, correctivo y predictiv
   - Solicitud de materiales
   - Estados: Pendiente, Aprobado, Rechazado, Completado
 
+- **📊 Plan de Muestreo Estadístico** ⭐ NUEVO
+  - Metodología de ingeniería industrial
+  - Muestreo pseudoaleatorio reproducible
+  - Análisis estadístico de mejoras
+  - Justificación cuantitativa con IC 95%
+  - Validación de significancia estadística
+
 ## 🏗️ Arquitectura Técnica
 
 ### **Frontend**
@@ -209,6 +216,51 @@ El sistema distribuye automáticamente el trabajo considerando:
   - Considera carga actual de cada turno
   - Prioriza según urgencia
 
+## 📊 Plan de Muestreo Estadístico ⭐ NUEVO
+
+Sistema completo para **justificar mejoras mediante metodología científica**.
+
+### **Características**
+- ✅ Muestreo pseudoaleatorio reproducible (LCG)
+- ✅ Cálculo de tamaño de muestra (n=80 para N=100, 95% confianza)
+- ✅ Estratificación por turnos/complejidad
+- ✅ Análisis estadístico con intervalos de confianza
+- ✅ Prueba de significancia (prueba t)
+- ✅ 6 KPIs medidos: MTBF, MTTR, OEE, Disponibilidad, Cumplimiento PM, Utilización
+
+### **Metodología de 3 Fases**
+1. **Línea Base** (4 semanas): Medición de KPIs actuales
+2. **Intervención** (4 semanas): Implementación de mejoras
+3. **Post-Intervención** (4 semanas): Medición de resultados
+
+### **Ejemplo de Resultado**
+```
+MTBF: 485h → 658h (+35.67%)
+IC 95%: [32.1%, 39.2%]
+Significancia: p < 0.001 ✓
+```
+
+### **Documentación**
+Ver carpeta [docs/plan-muestreo/](docs/plan-muestreo/) para:
+- Marco teórico completo
+- Guía de implementación paso a paso
+- Código JavaScript funcional
+- Tests de validación (19/19 aprobados)
+
+### **Uso Rápido**
+```javascript
+import samplingService from './src/services/samplingService';
+
+// Calcular tamaño de muestra
+const n = samplingService.calcularTamañoMuestra(100, 0.95, 0.05);
+
+// Seleccionar muestra aleatoria
+const muestra = samplingService.seleccionarMuestraAleatoria(equipos, n, 12345);
+
+// Analizar mejora
+const reporte = samplingService.generarReporteMejora(baseline, post, kpiInfo);
+```
+
 ## 📊 Tecnologías Utilizadas
 
 | Tecnología | Versión | Propósito |
@@ -233,10 +285,18 @@ El sistema distribuye automáticamente el trabajo considerando:
 
 ## 📝 Documentación Adicional
 
+### Documentación General
 - 📄 [SISTEMA-RECURRENTE-LISTO.md](textos/SISTEMA-RECURRENTE-LISTO.md) - Guía rápida de plantillas
 - 📄 [ESPECIFICACION-PLANTILLAS-RECURRENTES.md](textos/ESPECIFICACION-PLANTILLAS-RECURRENTES.md) - Especificación completa
 - 📄 [FIX-JSONB-DIAS-SEMANA.md](FIX-JSONB-DIAS-SEMANA.md) - Solución de error JSONB
 - 📄 [ANALISIS-ARCHIVOS-TEST.md](ANALISIS-ARCHIVOS-TEST.md) - Análisis de archivos de prueba
+
+### 📊 Plan de Muestreo Estadístico ⭐ NUEVO
+- 📄 [JUSTIFICACION-MANUAL.md](docs/plan-muestreo/JUSTIFICACION-MANUAL.md) - **LEER PRIMERO** - Resumen ejecutivo
+- 📄 [PLAN-MUESTREO-ESTADISTICO.md](docs/plan-muestreo/PLAN-MUESTREO-ESTADISTICO.md) - Plan completo con marco teórico
+- 📄 [GUIA-PRACTICA-MUESTREO.md](docs/plan-muestreo/GUIA-PRACTICA-MUESTREO.md) - Guía paso a paso
+- 💻 [samplingService.js](src/services/samplingService.js) - Implementación del servicio
+- ✅ [test-sampling.js](docs/plan-muestreo/test-sampling.js) - Suite de tests (19/19 aprobados)
 
 ## 🚧 Roadmap
 
@@ -246,6 +306,7 @@ El sistema distribuye automáticamente el trabajo considerando:
 - [x] Asignación automática inteligente
 - [x] Gestión de equipos, operadores e inventario
 - [x] Requisiciones básicas
+- [x] Plan de muestreo estadístico ⭐ NUEVO
 
 ### **Fase 2 - 🚧 En Desarrollo**
 - [ ] Requisiciones con items JSONB
