@@ -240,7 +240,9 @@ function calcularIntervaloConfianza(datos, confianza = 0.95) {
   // Para n < 30, usar valores más conservadores
   let tCritico = valoresT[confianza] || 1.96;
   if (n < 30) {
-    tCritico *= 1.1; // Ajuste conservador
+    // Factor de ajuste conservador para muestras pequeñas
+    const SMALL_SAMPLE_ADJUSTMENT = 1.1;
+    tCritico *= SMALL_SAMPLE_ADJUSTMENT;
   }
 
   const margenError = tCritico * errorEstandar;
@@ -292,8 +294,13 @@ function pruebaT(muestraAntes, muestraDespues, alfa = 0.05) {
   // Grados de libertad (aproximación de Welch)
   const gl = stats1.n + stats2.n - 2;
 
-  // Valor crítico aproximado (bilateral)
-  const tCritico = alfa === 0.05 ? 1.96 : 2.576;
+  // Valor crítico basado en alfa (bilateral)
+  const valoresTCritico = {
+    0.01: 2.576,
+    0.05: 1.96,
+    0.10: 1.645
+  };
+  const tCritico = valoresTCritico[alfa] || 1.96;
 
   const esSignificativo = Math.abs(t) > tCritico;
 

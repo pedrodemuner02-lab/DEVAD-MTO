@@ -5,7 +5,7 @@
  * para implementar el plan de muestreo en DEVAD-MTO
  */
 
-import samplingService from '../src/services/samplingService.js';
+import samplingService from '../../src/services/samplingService.js';
 
 // ============================================================================
 // EJEMPLO 1: Calcular Tamaño de Muestra

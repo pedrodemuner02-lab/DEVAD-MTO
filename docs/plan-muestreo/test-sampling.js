@@ -74,7 +74,7 @@ function calcularEstadisticas(datos) {
 // ============================================================================
 
 console.log('🧪 EJECUTANDO TESTS DEL PLAN DE MUESTREO\n');
-console.log('=' .repeat(70));
+console.log('='.repeat(70));
 
 let testsAprobados = 0;
 let testsTotales = 0;
