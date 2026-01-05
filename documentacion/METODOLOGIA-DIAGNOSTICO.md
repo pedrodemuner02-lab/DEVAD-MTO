@@ -246,7 +246,7 @@ El sistema DEVAD-MTO como solución integral que aborda todos estos puntos de ma
 
 ## Referencias
 
-- Observaciones directas en planta (Octubre 2024 - Enero 2025)
+- Observaciones directas en planta (Octubre 2024 - Diciembre 2025)
 - Entrevistas con personal operativo y directivo
 - Documentación técnica disponible
 - Mejores prácticas de mantenimiento industrial

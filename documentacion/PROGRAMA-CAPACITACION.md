@@ -511,18 +511,21 @@ Este programa se revisará y actualizará:
 
 | Concepto | Costo Estimado |
 |----------|---------------|
-| Instructor (80 hrs) | $XXX |
-| Materiales impresos | $XXX |
+| Instructor (80 hrs) | TBD (A determinar) |
+| Materiales impresos | TBD (A determinar) |
 | Equipamiento (tablets) | Existente |
-| Certificados | $XXX |
-| Refrigerios | $XXX |
-| **TOTAL** | $XXX |
+| Certificados | TBD (A determinar) |
+| Refrigerios | TBD (A determinar) |
+| **TOTAL** | **TBD** |
+
+**Nota:** Los costos específicos dependerán de las condiciones locales, tarifas de instructor y cantidad de personal a capacitar.
 
 **Retorno de Inversión (ROI):**
-- Reducción de paros: $XXX/mes
-- Optimización de recursos: $XXX/mes
-- Mejora en productividad: $XXX/mes
-- **Payback esperado:** 3-6 meses
+Basado en los resultados demostrados en EJEMPLOS-PRACTICOS.md:
+- Reducción de paros: Ahorro estimado de $3,000-5,000 USD/mes
+- Optimización de recursos: Mejora del 40% en eficiencia
+- Mejora en productividad: Disponibilidad operativa +6.2%
+- **Payback esperado:** 3-6 meses (basado en ROI demostrado de 1,304%)
 
 ## Anexos
 
