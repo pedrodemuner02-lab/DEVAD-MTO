@@ -231,8 +231,21 @@ El sistema distribuye automáticamente el trabajo considerando:
 ### **Error: Tabla maintenance_templates no existe**
 **Solución:** Sistema híbrido implementado usando columna `es_plantilla` en tabla `maintenance`.
 
-## 📝 Documentación Adicional
+## 📝 Documentación
 
+### 📚 Documentación Académica y Técnica Completa
+**[📁 Ver carpeta documentacion/](documentacion/)**
+
+Documentación completa del desarrollo del proyecto, ideal para tesis y residencias profesionales:
+
+#### Documentos Principales
+- 📄 **[CAPITULO-3-DESARROLLO.md](documentacion/CAPITULO-3-DESARROLLO.md)** - Capítulo 3 completo: Metodología, diagnóstico, diseño e implementación
+- 📄 **[METODOLOGIA-DIAGNOSTICO.md](documentacion/METODOLOGIA-DIAGNOSTICO.md)** - Metodología de análisis en 6 fases
+- 📄 **[ESPECIFICACIONES-TECNICAS.md](documentacion/ESPECIFICACIONES-TECNICAS.md)** - Arquitectura, tecnologías y base de datos
+- 📄 **[PROGRAMA-CAPACITACION.md](documentacion/PROGRAMA-CAPACITACION.md)** - Programa completo de capacitación por roles
+- 📄 **[EJEMPLOS-PRACTICOS.md](documentacion/EJEMPLOS-PRACTICOS.md)** - Casos de uso reales con ROI calculado
+
+### 📋 Documentación Técnica del Sistema
 - 📄 [SISTEMA-RECURRENTE-LISTO.md](textos/SISTEMA-RECURRENTE-LISTO.md) - Guía rápida de plantillas
 - 📄 [ESPECIFICACION-PLANTILLAS-RECURRENTES.md](textos/ESPECIFICACION-PLANTILLAS-RECURRENTES.md) - Especificación completa
 - 📄 [FIX-JSONB-DIAS-SEMANA.md](FIX-JSONB-DIAS-SEMANA.md) - Solución de error JSONB
@@ -287,5 +300,6 @@ Este proyecto es privado y propietario del Instituto Tecnológico Superior de Hu
 
 ---
 
-**Versión:** 1.0.0 - Sistema de Plantillas Recurrentes Implementado
-**Última Actualización:** Octubre 2025
+**Versión:** 1.0.0 - Sistema de Plantillas Recurrentes Implementado  
+**Última Actualización:** Enero 2026  
+**Documentación:** Completa y lista para uso académico/profesional
