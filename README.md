@@ -233,10 +233,15 @@ El sistema distribuye automáticamente el trabajo considerando:
 
 ## 📝 Documentación Adicional
 
+### Documentación Técnica del Sistema
 - 📄 [SISTEMA-RECURRENTE-LISTO.md](textos/SISTEMA-RECURRENTE-LISTO.md) - Guía rápida de plantillas
 - 📄 [ESPECIFICACION-PLANTILLAS-RECURRENTES.md](textos/ESPECIFICACION-PLANTILLAS-RECURRENTES.md) - Especificación completa
 - 📄 [FIX-JSONB-DIAS-SEMANA.md](FIX-JSONB-DIAS-SEMANA.md) - Solución de error JSONB
 - 📄 [ANALISIS-ARCHIVOS-TEST.md](ANALISIS-ARCHIVOS-TEST.md) - Análisis de archivos de prueba
+
+### Documentación Académica
+- 📚 [docs/](docs/) - Documentación académica y referencias bibliográficas
+- 📄 [2.3. Gestión de Mantenimiento en la Industria Avícola](docs/2.3-GESTION-MANTENIMIENTO-INDUSTRIA-AVICOLA.md) - Historia, fundamentos y referencias APA
 
 ## 🚧 Roadmap
 
